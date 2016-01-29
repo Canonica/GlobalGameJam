@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour {
     public GameObject MainMenuCanvas;
     public GameObject CreditsCanvas;
     public GameObject EndGameCanvas;
+    public GameObject HowToPlayCanvas;
     public GameObject UiGameCanvas;
 
     public GameObject PauseCanvas;
@@ -16,20 +17,17 @@ public class MenuManager : MonoBehaviour {
     public AudioClip audioclipGameOver;
     private GameObject speakerGameOver;
 
-    public GameObject TutoBox;
 
     public CanvasGroup MainMenuCanvasGroup;
+    public CanvasGroup HowToPlayCanvasGroup;
     public CanvasGroup CreditsCanvasGroup;
     public CanvasGroup EndGameCanvasGroup;
 
     public float fadeInSpeed;
     public float fadeOutSpeed;
 
-    public bool hasFinishedTuto = false;
-
     float delay = 0.5f;
 
-    public bool isMessageBox = false;
     public bool isInMenu = false;
     public bool isInGame = false;
 
@@ -44,78 +42,52 @@ public class MenuManager : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-
         StartCoroutine(fadeIn(MainMenuCanvasGroup, fadeInSpeed));
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (isMessageBox)
-        {
-            if(delay != 0)
-              delay = Mathf.Max(delay - Time.deltaTime, 0f);
-            if (delay == 0)
-            {
-                if (Input.GetButtonDown("A_button_1"))
-                {
 
-                    Application.LoadLevel("BossFeature");
-                    TutoBox.SetActive(false);
-                    isMessageBox = false;
-                    isInMenu = false;
-                    
-                }
-                else if (Input.GetButtonDown("B_button_1"))
-                {
-
-                    Application.LoadLevel("BossFeatureWithoutTuto");
-                    TutoBox.SetActive(false);
-                    isMessageBox = false;
-                    isInMenu = false;
-                    
-                }
-            }
-            
-        }
-
-        if (Input.GetButtonDown("Start_button_1") && Application.loadedLevelName !="Menu" && !EndGameCanvas.activeInHierarchy)
-        {
-            Time.timeScale = 0;
-            isInMenu = true;
-            PauseCanvas.SetActive(true);
-
-        }
-
-    }
-
-    public void OnClickPlay()
-    {
-        TutoBox.SetActive(true);
-        isMessageBox = true;
-        MainMenuCanvas.GetComponentInChildren<Button>().interactable = false;
-    }
 
     public void Quit()
     {
         Application.Quit();
     }
 
+    public void Play()
+    {
+        isInMenu = false;
+        Application.LoadLevel("Game");
+    }
+
+    public void HowToPlay()
+    {
+        HideAll();
+        HowToPlayCanvas.SetActive(true);
+        StartCoroutine(fadeIn(HowToPlayCanvasGroup, fadeInSpeed));
+        StartCoroutine(fadeOut(MainMenuCanvasGroup));
+    }
+    
     public void Main_Menu()
     {
-
+        GameManager.instance.gamestate = GameManager.GameState.menu;
         Time.timeScale = 1;
         isInMenu = false;
         ChangeCanvas(MainMenuCanvasGroup, MainMenuCanvasGroup);
-        Application.LoadLevel(0);
+        Application.LoadLevel("MainMenu");
     }
 
-    public void Main_Menu_From_Credit()
+    public void MainMenuFromCredit()
     {
         HideAll();
         MainMenuCanvas.SetActive(true);
         StartCoroutine(fadeIn(MainMenuCanvasGroup, fadeInSpeed));
         StartCoroutine(fadeOut(CreditsCanvasGroup));
+    }
 
+    public void MainMenuFromHowToPlay()
+    {
+        HideAll();
+        MainMenuCanvas.SetActive(true);
+        StartCoroutine(fadeIn(MainMenuCanvasGroup, fadeInSpeed));
+        StartCoroutine(fadeOut(CreditsCanvasGroup));
     }
 
     public void TryAgain()
@@ -147,13 +119,7 @@ public class MenuManager : MonoBehaviour {
         Invoke("PutPause", 2.5f);
        
 
-        if (win)
-        {
-            EndGameCanvas.transform.FindChild("CanvasGroup").FindChild("WinText").GetComponent<Text>().text = "You defeated Warlord Paresh";
-        }else
-        {
-            EndGameCanvas.transform.FindChild("CanvasGroup").FindChild("WinText").GetComponent<Text>().text = "You got defeated";
-        }
+
     }
 
     public void Restart()
@@ -161,14 +127,6 @@ public class MenuManager : MonoBehaviour {
 
         isInMenu = false;
         Time.timeScale = 1;
-        if (hasFinishedTuto)
-        {
-            Application.LoadLevel("BossFeatureWithoutTuto");
-            //Load scene boss
-        }else
-        {
-            Application.LoadLevel("BossFeature");
-        }
     }
 
     public void Resume()
@@ -182,8 +140,8 @@ public class MenuManager : MonoBehaviour {
     public void HideAll()
     {
         MainMenuCanvas.SetActive(false);
+        HowToPlayCanvas.SetActive(false);
         CreditsCanvas.SetActive(false);
-        EndGameCanvas.SetActive(false);
     }
 
     IEnumerator fadeIn(CanvasGroup currentCanva, float fadeInSpeed)
@@ -224,10 +182,5 @@ public class MenuManager : MonoBehaviour {
     {
         Time.timeScale = 0;
     }
-    
-    
-
-
-
 }
 
