@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour
 {
-    EnemiesManager instanceEM;
-    GameManager instanceGM;
+    public EnemiesManager instanceEM;
+    public GameManager instanceGM;
     public float mLife;
     public float angleHit;
     public float rangeHit;
@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     public int bonusMultiKill;
     public float timeLastKill;
     public float timeMultiplier;
+    public bool mCanAttack;
+    public float attackDelay;
+    public GameObject box;
 
     public bool mCanAttack;
 
@@ -29,33 +32,25 @@ public class Player : MonoBehaviour
         instanceGM = GameManager.instance;
         timeLastKill = Time.time;
         mCanAttack = true;
-        attackDelay = 0.4168f;
+        attackDelay = 0.5f;
     }
-	
-	void Update ()
+    void Update()
     {
         if (GameManager.instance.gamestate == GameManager.GameState.playing)
         {
-            if (Input.GetMouseButtonDown(0) && mCanAttack)
-            {
-                HitKeyBoard();
-                StartCoroutine(Attack());
-            }
-            if (Input.GetButtonDown("A_button_0"))
-            {
-                HitController();
-                StartCoroutine(AttackController());
-            }
+
             if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1") < -0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
                 if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
                 {
                     Move(new Vector3(-1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                    transform.rotation = new Quaternion(0, 180, 0, 1);
                 }
                 else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
                 {
                     Move(new Vector3(1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                    transform.rotation = new Quaternion(0, 0, 0, 1);
                 }
                 else
                 {
@@ -68,10 +63,12 @@ public class Player : MonoBehaviour
                 if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
                 {
                     Move(new Vector3(-1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                    transform.rotation = new Quaternion(0, 180, 0, 1);
                 }
                 else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
                 {
                     Move(new Vector3(1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                    transform.rotation = new Quaternion(0, 0, 0, 1);
                 }
                 else
                 {
@@ -82,12 +79,19 @@ public class Player : MonoBehaviour
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
                 Move(new Vector3(-1, 0, 0));
+                transform.rotation = new Quaternion(0, 180, 0, 1);
             }
             else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
                 Move(new Vector3(1, 0, 0));
+                transform.rotation = new Quaternion(0, 0, 0, 1);
             }
+        }
+
+        if ((Input.GetMouseButtonDown(0) || Input.GetButtonDown("A_button_0")) && mCanAttack)
+        {
+            StartCoroutine(Attack());
         }
 
         if (GameManager.instance.gamestate == GameManager.GameState.house)
@@ -105,7 +109,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void HitKeyBoard()
+    /*void HitKeyBoard()
     {
         
         sizeBeforeHit = instanceEM.mEnemies.Count;
@@ -167,60 +171,7 @@ public class Player : MonoBehaviour
 
             score += addScore;
         }
-    }
-
-    void HitController()
-    {
-        sizeBeforeHit = instanceEM.mEnemies.Count;
-        
-        Enemy enemy;
-        Vector3 distance;
-        float angle;
-        for (int i = 0; i < instanceEM.mEnemies.Count; i++)
-        {
-            enemy = instanceEM.mEnemies[i];
-            distance = enemy.transform.position - transform.position;
-            angle = Mathf.Atan2(enemy.transform.position.z, enemy.transform.position.x);
-
-            if (Mathf.Sqrt(angle * angle) < Mathf.Sqrt(angleHit * angleHit))
-            {
-                if ((enemy.transform.position - transform.position).magnitude < rangeHit)
-                {
-                    enemy.mLife--;
-                    if (enemy.mLife < 1)
-                    {
-                        instanceEM.mEnemies.Remove(enemy);
-                        enemy.gameObject.SetActive(false);
-                        i--;
-                    }
-                }
-            }
-        }
-
-        //Scoring
-        if (Time.time > timeLastKill + timeMultiplier)
-            multiplierScore = 1;
-
-        if (sizeBeforeHit - instanceEM.mEnemies.Count > 0)
-        {
-            Debug.Log("Yolo");
-            int addScore = 0;
-            addScore += scoreByKill * (sizeBeforeHit - instanceEM.mEnemies.Count);
-            addScore += bonusMultiKill * (sizeBeforeHit - instanceEM.mEnemies.Count - 1);
-            addScore *= multiplierScore;
-
-            if (addScore > 20000)
-                multiplierScore = 4;
-            else if (addScore > 5000)
-                multiplierScore = 3;
-            else if (addScore > 1000)
-                multiplierScore = 2;
-
-            sizeBeforeHit = instanceEM.mEnemies.Count;
-
-            score += addScore;
-        }
-    }
+    }*/
 
     public void Move(Vector3 direction)
     {
@@ -236,23 +187,17 @@ public class Player : MonoBehaviour
             instanceGM.GameOver();
         }
     }
-
     IEnumerator Attack()
     {
-        
+
         mCanAttack = false;
         this.GetComponent<Animator>().SetTrigger("triggerAttack");
-        HitKeyBoard();
+        GameObject obj = Instantiate(box, transform.GetChild(0).transform.position, Quaternion.identity) as GameObject;
+        obj.transform.parent = transform;
         yield return new WaitForSeconds(attackDelay);
         this.GetComponent<Animator>().ResetTrigger("triggerAttack");
-        mCanAttack = true;
-    }
+        Destroy(obj.gameObject);
 
-    IEnumerator AttackController()
-    {
-        mCanAttack = false;
-        HitController();
-        yield return new WaitForSeconds(attackDelay);
         mCanAttack = true;
     }
 }
