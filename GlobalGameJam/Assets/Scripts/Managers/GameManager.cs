@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(gamestate);
         if (GameManager.instance.gamestate == GameManager.GameState.pause)
         {
             //panelPause.SetActive(true);
