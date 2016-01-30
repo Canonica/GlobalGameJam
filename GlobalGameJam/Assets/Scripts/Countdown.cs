@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class Countdown : MonoBehaviour {
 	public float timer;
 	public float countDown = 5;
-
+    public Player player;
     public int m_second = 59;
     public int m_minute = 0;
     private Text m_text;
@@ -79,9 +79,8 @@ public class Countdown : MonoBehaviour {
                 }
         }
         yield return new WaitForSeconds(1f);
-        GameManager.instance.EndOfGame();
+        GameManager.instance.EndOfGame(player.score);
     }
-
 }
 
 

@@ -30,17 +30,39 @@ public class Player : MonoBehaviour
         }
         if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            Move(new Vector3(0, 1, 0));
+            if(Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A))
+            {
+                Move(new Vector3(-Mathf.Sqrt(2), Mathf.Sqrt(2), 0));
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                Move(new Vector3(Mathf.Sqrt(2), Mathf.Sqrt(2), 0));
+            }
+            else
+            {
+                Move(new Vector3(0, 1, 0));
+            }
         }
-        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A))
+            {
+                Move(new Vector3(-Mathf.Sqrt(2), -Mathf.Sqrt(2), 0));
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                Move(new Vector3(Mathf.Sqrt(2), -Mathf.Sqrt(2), 0));
+            }
+            else
+            {
+                Move(new Vector3(0, -1, 0));
+            }
+        }
+        else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             Move(new Vector3(-1, 0, 0));
         }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            Move(new Vector3(0, -1, 0));
-        }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             Move(new Vector3(1, 0, 0));
         }
@@ -105,7 +127,6 @@ public class Player : MonoBehaviour
 
             score += addScore;
         }
-        Debug.Log(score);
     }
 
     public void Move(Vector3 direction)
