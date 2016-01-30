@@ -27,35 +27,57 @@ public class Player : MonoBehaviour
 	
 	void Update ()
     {
-        if(GameManager.instance.gamestate == GameManager.GameState.playing)
+        if (GameManager.instance.gamestate == GameManager.GameState.playing)
         {
-            if(Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0))
             {
-                Hit();
+                HitKeyBoard();
             }
             if (Input.GetButtonDown("A_button_0"))
             {
-                //Hit Manette
+                HitController();
             }
-            if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1" ) < -0.2)
+            if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1") < -0.2)
             {
-                Move(new Vector3(0, 1, 0));
+                if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
+                {
+                    Move(new Vector3(-1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                }
+                else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
+                {
+                    Move(new Vector3(1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                }
+                else
+                {
+                    Move(new Vector3(0, 1, 0));
+                }
             }
-            if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
+            else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("L_YAxis_1") > 0.2)
+            {
+                if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
+                {
+                    Move(new Vector3(-1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                }
+                else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
+                {
+                    Move(new Vector3(1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                }
+                else
+                {
+                    Move(new Vector3(0, -1, 0));
+                }
+            }
+            else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
             {
                 Move(new Vector3(-1, 0, 0));
             }
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("L_YAxis_1") > 0.2)
-            {
-                Move(new Vector3(0, -1, 0));
-            }
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
+            else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
                 Move(new Vector3(1, 0, 0));
             }
         }
 
-        if(GameManager.instance.gamestate == GameManager.GameState.house)
+        if (GameManager.instance.gamestate == GameManager.GameState.house)
         {
             if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
             {
@@ -65,13 +87,12 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
                 transform.localRotation = new Quaternion(0f, 0f, 0f, 1);
-                Move(new Vector3(1, 0, 0));
+                Move(new Vector3(0, 1, 0));
             }
         }
-	    
     }
 
-    void Hit()
+    void HitKeyBoard()
     {
         sizeBeforeHit = instanceEM.mEnemies.Count;
         //Si on a touche (la chatte a la voisine !!) ou pas
@@ -132,7 +153,59 @@ public class Player : MonoBehaviour
 
             score += addScore;
         }
-        Debug.Log(score);
+    }
+
+    void HitController()
+    {
+        sizeBeforeHit = instanceEM.mEnemies.Count;
+        
+        Enemy enemy;
+        Vector3 distance;
+        float angle;
+        for (int i = 0; i < instanceEM.mEnemies.Count; i++)
+        {
+            enemy = instanceEM.mEnemies[i];
+            distance = enemy.transform.position - transform.position;
+            angle = Mathf.Atan2(enemy.transform.position.z, enemy.transform.position.x);
+
+            if (Mathf.Sqrt(angle * angle) < Mathf.Sqrt(angleHit * angleHit))
+            {
+                if ((enemy.transform.position - transform.position).magnitude < rangeHit)
+                {
+                    enemy.mLife--;
+                    if (enemy.mLife < 1)
+                    {
+                        instanceEM.mEnemies.Remove(enemy);
+                        enemy.gameObject.SetActive(false);
+                        i--;
+                    }
+                }
+            }
+        }
+
+        //Scoring
+        if (Time.time > timeLastKill + timeMultiplier)
+            multiplierScore = 1;
+
+        if (sizeBeforeHit - instanceEM.mEnemies.Count > 0)
+        {
+            Debug.Log("Yolo");
+            int addScore = 0;
+            addScore += scoreByKill * (sizeBeforeHit - instanceEM.mEnemies.Count);
+            addScore += bonusMultiKill * (sizeBeforeHit - instanceEM.mEnemies.Count - 1);
+            addScore *= multiplierScore;
+
+            if (addScore > 20000)
+                multiplierScore = 4;
+            else if (addScore > 5000)
+                multiplierScore = 3;
+            else if (addScore > 1000)
+                multiplierScore = 2;
+
+            sizeBeforeHit = instanceEM.mEnemies.Count;
+
+            score += addScore;
+        }
     }
 
     public void Move(Vector3 direction)

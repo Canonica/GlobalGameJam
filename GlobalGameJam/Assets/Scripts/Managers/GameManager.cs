@@ -53,11 +53,12 @@ public class GameManager : MonoBehaviour
     public void EndOfGame(int scorePlayer)
     {
         GameManager.instance.gamestate = GameManager.GameState.house;
-        DayManager.instance.currentDay++;
-        if(scorePlayer >= goodScoreDayOne /*+ Formule evolution score*/)
+        if(scorePlayer >= goodScoreDayOne * Mathf.Pow(1.3f, DayManager.instance.currentDay))
+
         {
             CollectiblesManager.instance.mCollectibles[DayManager.instance.currentDay%4] = true;
         }
+        DayManager.instance.currentDay++;
         Application.LoadLevel("House");
     }
 
