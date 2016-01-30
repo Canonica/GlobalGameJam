@@ -42,11 +42,11 @@ public class GameManager : MonoBehaviour
 
     public void EndOfGame(int scorePlayer)
     {
-        DayManager.instance.currentDay++;
-        if(scorePlayer >= goodScoreDayOne /*+ Formule evolution score*/)
+        if(scorePlayer >= goodScoreDayOne * Mathf.Pow(1.3f, DayManager.instance.currentDay))
         {
             CollectiblesManager.instance.mCollectibles[DayManager.instance.currentDay] = true;
         }
+        DayManager.instance.currentDay++;
         Application.LoadLevel("House");
     }
 

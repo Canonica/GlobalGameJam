@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/ParticlesTests.unity
+- path: Assets/Scenes/ToTestEveryThing.unity
   isLoaded: 1
   isActive: 1
