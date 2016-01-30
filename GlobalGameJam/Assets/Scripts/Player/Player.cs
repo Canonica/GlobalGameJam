@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour
 {
     EnemiesManager instanceEM;
+    GameManager instanceGM;
+    public float mLife;
     public float angleHit;
     public float rangeHit;
     public float movementSpeed;
@@ -19,6 +21,7 @@ public class Player : MonoBehaviour
     void Start ()
     {
         instanceEM = EnemiesManager.instance;
+        instanceGM = GameManager.instance;
         timeLastKill = Time.time;
     }
 	
@@ -82,9 +85,13 @@ public class Player : MonoBehaviour
             {
                 if((enemy.transform.position-transform.position).magnitude < rangeHit)
                 {
-                    instanceEM.mEnemies.Remove(enemy);
-                    enemy.gameObject.SetActive(false);
-                    i--;
+                    enemy.mLife--;
+                    if(enemy.mLife < 1)
+                    {
+                        instanceEM.mEnemies.Remove(enemy);
+                        enemy.gameObject.SetActive(false);
+                        i--;
+                    }
                 }
             }
         }
@@ -119,5 +126,14 @@ public class Player : MonoBehaviour
     {
         //  transform.LookAt(transform.position + direction * movementSpeed);
         transform.position += direction * movementSpeed;
+    }
+
+    public void receiveDamage(int damage)
+    {
+        mLife -= damage;
+        if(mLife < 1)
+        {
+            instanceGM.GameOver();
+        }
     }
 }
