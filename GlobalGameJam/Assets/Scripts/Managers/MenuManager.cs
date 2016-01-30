@@ -67,6 +67,7 @@ public class MenuManager : MonoBehaviour {
     {
         isInMenu = false;
         Application.LoadLevel("House");
+        GameManager.instance.gamestate = GameManager.GameState.house;
     }
 
     public void HowToPlay()

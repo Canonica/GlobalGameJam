@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject panelPause;
     public Text playerName;
-    public enum GameState { menu, pause, playing, endOfGame, beforePlay };
+    public enum GameState { menu, pause, playing, endOfGame, beforePlay, house };
     public int goodScoreDayOne;
 
     public GameState gamestate;
@@ -28,8 +28,18 @@ public class GameManager : MonoBehaviour
         gamestate = GameState.menu;
     }
 
+    void OnLevelWasLoaded(int level)
+    {
+        if (level == 1)
+        {
+
+            Invoke("DestroyAllMonsters", 0.5f);
+        }
+    }
+
     void Update()
     {
+        Debug.Log(gamestate);
         if (GameManager.instance.gamestate == GameManager.GameState.pause)
         {
             //panelPause.SetActive(true);
@@ -42,10 +52,11 @@ public class GameManager : MonoBehaviour
 
     public void EndOfGame(int scorePlayer)
     {
+        GameManager.instance.gamestate = GameManager.GameState.house;
         DayManager.instance.currentDay++;
         if(scorePlayer >= goodScoreDayOne /*+ Formule evolution score*/)
         {
-            CollectiblesManager.instance.mCollectibles[DayManager.instance.currentDay] = true;
+            CollectiblesManager.instance.mCollectibles[DayManager.instance.currentDay%4] = true;
         }
         Application.LoadLevel("House");
     }
@@ -54,6 +65,16 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
 
+    }
+
+    void DestroyAllMonsters()
+    {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Enemy");
+
+        for (int i = 0; i < gameObjects.Length; i++)
+        {
+            Destroy(gameObjects[i]);
+        }
     }
 
 }

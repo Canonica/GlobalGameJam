@@ -18,6 +18,7 @@ public class CollectiblesManager : MonoBehaviour
         {
             mInstance = this;
         }
+        mCollectibles = new bool[8];
     }
 
     void OnLevelWasLoaded(int level)

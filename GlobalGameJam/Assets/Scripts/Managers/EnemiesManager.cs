@@ -53,11 +53,12 @@ public class EnemiesManager : MonoBehaviour
         StartCoroutine(spawnEnnemies(nbMaxEnemies));
     }
 
-    IEnumerator spawnEnnemies(int maxNbOFEnnemies)
+    public IEnumerator spawnEnnemies(int maxNbOFEnnemies)
     {
         while(GameManager.instance.gamestate == GameManager.GameState.playing)
         {
-            for(int i =0; i < maxNbOFEnnemies; i++)
+            
+            for (int i =0; i < maxNbOFEnnemies; i++)
             {
                 int randomSpawn = (int)UnityEngine.Random.Range(1f, 4.99f);
                 float randomX;
@@ -85,13 +86,13 @@ public class EnemiesManager : MonoBehaviour
                 
                 
                 yield return new WaitForSeconds(3*delayBetweenEnnemies / (nbMaxEnemies - mEnemies.Count-1));
+                Debug.Log("toto");
                 GameObject newEnemy = Instantiate(prefabEnemy, spawnPos, Quaternion.identity) as GameObject;
                 Enemy  test = newEnemy.GetComponent<Enemy>();
                 mEnemies.Add(test);
             }
             
         }
-        Debug.Log(nbMaxEnemies);
     }
 
 

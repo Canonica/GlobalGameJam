@@ -29,30 +29,44 @@ public class Player : MonoBehaviour
     {
         if(GameManager.instance.gamestate == GameManager.GameState.playing)
         {
-        if(Input.GetMouseButton(0))
-        {
-            Hit();
+            if(Input.GetMouseButton(0))
+            {
+                Hit();
+            }
+            if (Input.GetButtonDown("A_button_0"))
+            {
+                //Hit Manette
+            }
+            if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1" ) < -0.2)
+            {
+                Move(new Vector3(0, 1, 0));
+            }
+            if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
+            {
+                Move(new Vector3(-1, 0, 0));
+            }
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("L_YAxis_1") > 0.2)
+            {
+                Move(new Vector3(0, -1, 0));
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
+            {
+                Move(new Vector3(1, 0, 0));
+            }
         }
-        if (Input.GetButtonDown("A_button_0"))
+
+        if(GameManager.instance.gamestate == GameManager.GameState.house)
         {
-            //Hit Manette
-        }
-        if(Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1" ) < -0.2)
-        {
-            Move(new Vector3(0, 1, 0));
-        }
-        if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
-        {
-            Move(new Vector3(-1, 0, 0));
-        }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("L_YAxis_1") > 0.2)
-        {
-            Move(new Vector3(0, -1, 0));
-        }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
-        {
-            Move(new Vector3(1, 0, 0));
-        }
+            if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
+            {
+                transform.localRotation = new Quaternion(0f, 180f, 0f, 1);
+                Move(new Vector3(-1, 0, 0));
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
+            {
+                transform.localRotation = new Quaternion(0f, 0f, 0f, 1);
+                Move(new Vector3(1, 0, 0));
+            }
         }
 	    
     }
@@ -102,7 +116,6 @@ public class Player : MonoBehaviour
         
         if (sizeBeforeHit - instanceEM.mEnemies.Count > 0)
         {
-            Debug.Log("Yolo");
             int addScore = 0;
             addScore += scoreByKill * (sizeBeforeHit - instanceEM.mEnemies.Count);
             addScore += bonusMultiKill * (sizeBeforeHit - instanceEM.mEnemies.Count - 1);
