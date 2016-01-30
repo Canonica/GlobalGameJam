@@ -85,8 +85,9 @@ public class EnemiesManager : MonoBehaviour
                 
                 
                 yield return new WaitForSeconds(3*delayBetweenEnnemies / (nbMaxEnemies - mEnemies.Count-1));
-                Enemy newEnemy = Instantiate(prefabEnemy, spawnPos, Quaternion.identity) as Enemy;
-                mEnemies.Add(newEnemy);
+                GameObject newEnemy = Instantiate(prefabEnemy, spawnPos, Quaternion.identity) as GameObject;
+                Enemy  test = newEnemy.GetComponent<Enemy>();
+                mEnemies.Add(test);
             }
             
         }
