@@ -12,8 +12,7 @@ public class Enemy : MonoBehaviour
 	void Start ()
     {
         mPlayer = GameObject.FindGameObjectWithTag("Player");
-        Physics.IgnoreCollision(this.GetComponent<Collider>(), GetComponent<Collider>());
-
+        Debug.Log(mPlayer);
     }
 	
 	void Update ()

@@ -11,8 +11,8 @@ public class Collectible : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //Debug.Log(Vector3.Distance(transform.position, player.transform.position));
-        if(GameManager.instance.gamestate == GameManager.GameState.house && Vector3.Distance(transform.position, player.transform.position) <1)
+
+        if(GameManager.instance.gamestate == GameManager.GameState.house && Vector3.Distance(transform.position, player.transform.position) <1.5f)
         {
             StartCoroutine(CanDoAction());
            transform.GetChild(0).gameObject.SetActive(true);

@@ -18,27 +18,37 @@ public class Player : MonoBehaviour
     public float timeLastKill;
     public float timeMultiplier;
 
+    public bool mCanAttack;
+
+    public float attackDelay;
+
+
     void Start ()
     {
         instanceEM = EnemiesManager.instance;
         instanceGM = GameManager.instance;
         timeLastKill = Time.time;
+        mCanAttack = true;
+        attackDelay = 0.4168f;
     }
 	
 	void Update ()
     {
         if (GameManager.instance.gamestate == GameManager.GameState.playing)
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0) && mCanAttack)
             {
                 HitKeyBoard();
+                StartCoroutine(Attack());
             }
             if (Input.GetButtonDown("A_button_0"))
             {
                 HitController();
+                StartCoroutine(AttackController());
             }
             if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1") < -0.2)
             {
+                this.GetComponent<Animator>().SetTrigger("triggerMove");
                 if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
                 {
                     Move(new Vector3(-1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
@@ -54,6 +64,7 @@ public class Player : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("L_YAxis_1") > 0.2)
             {
+                this.GetComponent<Animator>().SetTrigger("triggerMove");
                 if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
                 {
                     Move(new Vector3(-1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
@@ -69,10 +80,12 @@ public class Player : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
             {
+                this.GetComponent<Animator>().SetTrigger("triggerMove");
                 Move(new Vector3(-1, 0, 0));
             }
             else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
+                this.GetComponent<Animator>().SetTrigger("triggerMove");
                 Move(new Vector3(1, 0, 0));
             }
         }
@@ -87,13 +100,14 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
                 transform.localRotation = new Quaternion(0f, 0f, 0f, 1);
-                Move(new Vector3(0, 1, 0));
+                Move(new Vector3(1, 0, 0));
             }
         }
     }
 
     void HitKeyBoard()
     {
+        
         sizeBeforeHit = instanceEM.mEnemies.Count;
         //Si on a touche (la chatte a la voisine !!) ou pas
         Vector3 mouse = new Vector3(Input.mousePosition.x, Input.mousePosition.y,Camera.main.transform.position.z);
@@ -221,5 +235,24 @@ public class Player : MonoBehaviour
         {
             instanceGM.GameOver();
         }
+    }
+
+    IEnumerator Attack()
+    {
+        
+        mCanAttack = false;
+        this.GetComponent<Animator>().SetTrigger("triggerAttack");
+        HitKeyBoard();
+        yield return new WaitForSeconds(attackDelay);
+        this.GetComponent<Animator>().ResetTrigger("triggerAttack");
+        mCanAttack = true;
+    }
+
+    IEnumerator AttackController()
+    {
+        mCanAttack = false;
+        HitController();
+        yield return new WaitForSeconds(attackDelay);
+        mCanAttack = true;
     }
 }

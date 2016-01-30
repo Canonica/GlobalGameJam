@@ -53,8 +53,8 @@ public class MenuManager : MonoBehaviour {
         if (Application.loadedLevelName == "House")
         {
             GameObject temp = GameObject.Find("ButtonFight");
-            buttonFight = temp.GetComponent<Button>();
-            buttonFight.onClick.AddListener(() => startFight());
+            //buttonFight = temp.GetComponent<Button>();
+            //buttonFight.onClick.AddListener(() => startFight());
         }
     }
 
