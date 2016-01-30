@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
 
     public void Move(Vector3 direction)
     {
-        transform.LookAt(transform.position + direction * movementSpeed);
+        //  transform.LookAt(transform.position + direction * movementSpeed);
         transform.position += direction * movementSpeed;
     }
 }

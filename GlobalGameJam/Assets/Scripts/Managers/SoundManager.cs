@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        speakerPrefab = Resources.Load<GameObject>("Speaker");
+        //speakerPrefab = Resources.Load<GameObject>("Speaker");
     }
 
     // Update is called once per frame
@@ -34,7 +34,7 @@ public class SoundManager : MonoBehaviour
 
     public GameObject playSound(AudioClip myclip, float volume)
     {
-        speaker = (GameObject)Instantiate(speakerPrefab, Vector3.zero, Quaternion.identity);
+        speaker = Instantiate(speakerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
         AudioSource audioSource = speaker.GetComponent<AudioSource>();
         float randomPitch = Random.Range(lowPitchRange, highPitchRange);
         audioSource.pitch = randomPitch;
