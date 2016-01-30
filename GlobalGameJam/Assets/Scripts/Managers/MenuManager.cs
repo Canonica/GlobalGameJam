@@ -23,6 +23,8 @@ public class MenuManager : MonoBehaviour {
     public CanvasGroup CreditsCanvasGroup;
     public CanvasGroup EndGameCanvasGroup;
 
+    Button buttonFight;
+
     public float fadeInSpeed;
     public float fadeOutSpeed;
 
@@ -37,6 +39,7 @@ public class MenuManager : MonoBehaviour {
     {
         if (instance == null)
             instance = this;
+
     }
 
     // Use this for initialization
@@ -45,6 +48,15 @@ public class MenuManager : MonoBehaviour {
         StartCoroutine(fadeIn(MainMenuCanvasGroup, fadeInSpeed));
     }
 
+    void OnLevelWasLoaded()
+    {
+        if (Application.loadedLevelName == "House")
+        {
+            GameObject temp = GameObject.Find("ButtonFight");
+            buttonFight = temp.GetComponent<Button>();
+            buttonFight.onClick.AddListener(() => startFight());
+        }
+    }
 
     public void Quit()
     {
@@ -54,7 +66,7 @@ public class MenuManager : MonoBehaviour {
     public void Play()
     {
         isInMenu = false;
-        Application.LoadLevel("Game");
+        Application.LoadLevel("House");
     }
 
     public void HowToPlay()
@@ -120,6 +132,11 @@ public class MenuManager : MonoBehaviour {
        
 
 
+    }
+
+    public void startFight()
+    {
+        Application.LoadLevel("Game");
     }
 
     public void Restart()

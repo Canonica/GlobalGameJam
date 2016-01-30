@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject panelPause;
     public Text playerName;
-    public enum GameState { menu, pause, playing, endOfGame };
+    public enum GameState { menu, pause, playing, endOfGame, beforePlay };
 
     public GameState gamestate;
     #region Singleton
@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
     {
         if (s_Instance == null)
             s_Instance = this;
-        DontDestroyOnLoad(this);
     }
     #endregion
     void Start()
@@ -44,7 +43,8 @@ public class GameManager : MonoBehaviour
 
     public void EndOfGame()
     {
-        Debug.Log("EndOfGame");
+        DayManager.instance.currentDay++;
+        Application.LoadLevel("House");
     }
 
 

@@ -78,7 +78,7 @@ public class Countdown : MonoBehaviour {
                     isLastMinutes = true;
                 }
         }
-
+        yield return new WaitForSeconds(1f);
         GameManager.instance.EndOfGame();
     }
 

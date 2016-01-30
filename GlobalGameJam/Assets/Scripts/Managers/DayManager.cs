@@ -16,16 +16,29 @@ public class DayManager : MonoBehaviour {
             instance = this;
     }
 
+    void OnLevelWasLoaded()
+    {
+        if (Application.loadedLevelName == "House")
+        {
+            mAllCanvasGroupDay = GameObject.FindGameObjectWithTag("groupAllDay").GetComponent<CanvasGroup>();
+            mCanvasGroupDay = GameObject.FindGameObjectWithTag("groupDay").GetComponent<CanvasGroup>();
+            ShowDay();
+        }
+
+
+    }
     // Use this for initialization
     void Start () {
         currentDay = 1;
-        //ShowDay();
     }
 	
 	// Update is called once per frame
 	void Update () {
 	
+        
 	}
+
+    
 
     private void ShowDay()
     {

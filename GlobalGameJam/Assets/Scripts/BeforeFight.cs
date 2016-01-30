@@ -27,6 +27,7 @@ public class BeforeFight : MonoBehaviour
 
     IEnumerator StartCDBeforeFight()
     {
+        GameManager.instance.gamestate = GameManager.GameState.beforePlay;
         float timer = 5;
         while (m_second >= 0)
         {
@@ -56,9 +57,9 @@ public class BeforeFight : MonoBehaviour
         }
         text.CrossFadeAlpha(1f, 0.2f, false);
         
-        text.text = "Clean";
+        text.text = "FIGHT";
         text.color = Color.red;
-        if (text.text == "Clean")
+        if (text.text == "FIGHT")
         {
             text.CrossFadeAlpha(1f, 0f, false);
             text.CrossFadeAlpha(0f, 1f, false);
