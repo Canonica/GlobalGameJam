@@ -47,5 +47,8 @@ public class GameManager : MonoBehaviour
         Application.LoadLevel("House");
     }
 
+    public void GameOver()
+    {
 
+    }
 }
