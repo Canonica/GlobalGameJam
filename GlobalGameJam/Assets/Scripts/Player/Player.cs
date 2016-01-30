@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+
 
 public class Player : MonoBehaviour
 {
@@ -21,10 +23,7 @@ public class Player : MonoBehaviour
     public float attackDelay;
     public GameObject box;
 
-    public bool mCanAttack;
-
-    public float attackDelay;
-
+    public Text scoreText;
 
     void Start ()
     {
@@ -107,6 +106,9 @@ public class Player : MonoBehaviour
                 Move(new Vector3(1, 0, 0));
             }
         }
+
+        scoreText.text = score.ToString();
+        Debug.Log(score);
     }
 
     /*void HitKeyBoard()
@@ -176,7 +178,7 @@ public class Player : MonoBehaviour
     public void Move(Vector3 direction)
     {
         //  transform.LookAt(transform.position + direction * movementSpeed);
-        transform.position += direction * movementSpeed;
+        transform.position += direction * movementSpeed*50  *Time.deltaTime;
     }
 
     public void receiveDamage(int damage)

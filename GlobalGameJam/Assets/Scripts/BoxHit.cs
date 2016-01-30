@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class BoxHit : MonoBehaviour
 {
     Player player;
-    
+
     void Start()
     {
         player = GetComponentInParent<Player>();
@@ -12,16 +13,20 @@ public class BoxHit : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("sdlgjnsdkfjnceq");
+        if (other.tag == "Player") return;
         player.sizeBeforeHit = player.instanceEM.mEnemies.Count;
-        Enemy enemy = other.GetComponent<Enemy>();
-
-        enemy.mLife--;
-        if (enemy.mLife < 1)
+        if(other.tag == "Enemy")
         {
-            player.instanceEM.mEnemies.Remove(enemy);
-            enemy.gameObject.SetActive(false);
+            Enemy enemy = other.GetComponent<Enemy>();
+            enemy.mLife--;
+            if (enemy.mLife < 1)
+            {
+                player.instanceEM.mEnemies.Remove(enemy);
+                enemy.gameObject.SetActive(false);
+            }
         }
+        
+        
 
 
         //Scoring
@@ -31,7 +36,7 @@ public class BoxHit : MonoBehaviour
         if (player.sizeBeforeHit - player.instanceEM.mEnemies.Count > 0)
         {
             int addScore = 0;
-            addScore += player.scoreByKill * (player.sizeBeforeHit - player.instanceEM.mEnemies.Count);
+            addScore += GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>().score * (player.sizeBeforeHit - player.instanceEM.mEnemies.Count);
             addScore += player.bonusMultiKill * (player.sizeBeforeHit - player.instanceEM.mEnemies.Count - 1);
             addScore *= player.multiplierScore;
 
@@ -47,5 +52,6 @@ public class BoxHit : MonoBehaviour
             player.score += addScore;
         }
     }
+
 }
     
