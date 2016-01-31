@@ -28,6 +28,9 @@ public class Player : MonoBehaviour
     public GameObject blockLeftPlayer;
     public GameObject blockRightPlayer;
 
+	//public GameObject mAxeParticle;
+	public List<GameObject> mMovementParticle;
+
     void Start ()
     {
         instanceEM = EnemiesManager.instance;
@@ -36,6 +39,7 @@ public class Player : MonoBehaviour
         mCanAttack = true;
         attackDelay = 0.5f;
     }
+
     void Update()
     {
         if (GameManager.instance.gamestate == GameManager.GameState.playing)
@@ -44,6 +48,7 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1") < -0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
+
                 if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
                 {
                     Move(new Vector3(-1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
@@ -54,11 +59,13 @@ public class Player : MonoBehaviour
                     Move(new Vector3(1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
                     transform.rotation = new Quaternion(0, 0, 0, 1);
                 }
+
                 else
                 {
                     Move(new Vector3(0, 1, 0));
                 }
             }
+
             else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("L_YAxis_1") > 0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
@@ -77,12 +84,14 @@ public class Player : MonoBehaviour
                     Move(new Vector3(0, -1, 0));
                 }
             }
+
             else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
                 Move(new Vector3(-1, 0, 0));
                 transform.rotation = new Quaternion(0, 180, 0, 1);
             }
+
             else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
@@ -185,7 +194,8 @@ public class Player : MonoBehaviour
     public void Move(Vector3 direction)
     {
         //  transform.LookAt(transform.position + direction * movementSpeed);
-        transform.position += direction * movementSpeed*50  *Time.deltaTime;
+        transform.position += direction * movementSpeed *50  *Time.deltaTime;
+		StartCoroutine(SpawnDust());
     }
 
     public void receiveDamage(int damage)
@@ -196,8 +206,10 @@ public class Player : MonoBehaviour
             instanceGM.GameOver();
         }
     }
+
     IEnumerator Attack()
     {
+		//Instantiate(mAxeParticle, this.transform.position, Quaternion.identity); // PARTICLES
 
         mCanAttack = false;
         this.GetComponent<Animator>().SetTrigger("triggerAttack");
@@ -209,4 +221,12 @@ public class Player : MonoBehaviour
 
         mCanAttack = true;
     }
+
+	IEnumerator SpawnDust()
+	{
+		int j = Mathf.RoundToInt(Random.Range(0, 2));
+		Instantiate(mMovementParticle[j], this.transform.position, Quaternion.identity);
+		yield return new WaitForSeconds(1);
+		yield break;
+	}
 }

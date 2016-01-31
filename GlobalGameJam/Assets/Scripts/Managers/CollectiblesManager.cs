@@ -12,12 +12,13 @@ public class CollectiblesManager : MonoBehaviour
 
 	void Awake () 
 	{
-		DontDestroyOnLoad(this); // makes sure this gameobject moves between the scenes
+		//DontDestroyOnLoad(this); // makes sure this gameobject moves between the scenes
 
         if (mInstance == null)
         {
             mInstance = this;
         }
+
         mCollectibles = new bool[8];
     }
 

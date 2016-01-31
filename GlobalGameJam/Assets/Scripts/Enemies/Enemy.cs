@@ -31,14 +31,4 @@ public class Enemy : MonoBehaviour
     {
         return score;
     }
-
-    /*void OnCollisionEnter(Collision collision)
-    {
-
-        if (collision.gameObject.tag == "Enemy")
-        {
-            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
-        }
-
-    }*/
 }

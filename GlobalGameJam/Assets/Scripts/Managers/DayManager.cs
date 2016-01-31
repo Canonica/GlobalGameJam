@@ -30,15 +30,7 @@ public class DayManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         currentDay = 1;
-    }
-	
-	// Update is called once per frame
-	void Update () {
-	
-        
-	}
-
-    
+    }    
 
     private void ShowDay()
     {
@@ -79,5 +71,3 @@ public class DayManager : MonoBehaviour {
         currentCanva.gameObject.SetActive(false);
     }
 }
-
-
