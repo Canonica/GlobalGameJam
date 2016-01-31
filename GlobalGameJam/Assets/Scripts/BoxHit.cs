@@ -8,7 +8,12 @@ public class BoxHit : MonoBehaviour
     Player player;
 
 	#region Particles
-	public List<GameObject> mEnemyDeathParticle;
+	[Header("Death")]
+
+	[Header("====- Particles -=====")]
+	public GameObject mEnemyDeathParticle;
+
+	[Header("Combo")]
 	public List<GameObject> mComboParticles;
 	public GameObject mAxeAttack;
 	#endregion
@@ -31,9 +36,9 @@ public class BoxHit : MonoBehaviour
             enemy.mLife--;
             if (enemy.mLife < 1)
             {
-				int i = Mathf.RoundToInt(Random.Range(0, 2));
-				print("i: " + i);
-				Instantiate(mEnemyDeathParticle[i], this.transform.position, Quaternion.identity);
+				//int i = Mathf.RoundToInt(Random.Range(0, 2));
+				//print("i: " + i);
+				Instantiate(mEnemyDeathParticle, this.transform.position, Quaternion.identity);
                 player.instanceEM.mEnemies.Remove(enemy);
                 enemy.gameObject.SetActive(false);
             }
