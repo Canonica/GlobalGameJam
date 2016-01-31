@@ -41,9 +41,9 @@ public class GameManager : MonoBehaviour
         if(level == 2)
         {
             CanvasEndGameWin = GameObject.FindGameObjectWithTag("CanvasEndGameWin");
-            CanvasEndGameLoose = GameObject.FindGameObjectWithTag("CanvasEndGameLoose");
+            
             CanvasEndGameWin.SetActive(false);
-            CanvasEndGameLoose.SetActive(false);
+
         }
     }
 

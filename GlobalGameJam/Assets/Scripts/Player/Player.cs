@@ -28,6 +28,27 @@ public class Player : MonoBehaviour
     public GameObject blockLeftPlayer;
     public GameObject blockRightPlayer;
 
+    public GameObject blockTopArena;
+    public GameObject blockLeftArena;
+    public GameObject blockRightArena;
+    public GameObject blockDownArena;
+
+    public AudioClip grunt1;
+    public AudioClip grunt2;
+    public AudioClip grunt3;
+    public AudioClip grunt4;
+    public AudioClip grunt5;
+    public AudioClip grunt6;
+
+    public AudioClip swoosh1;
+    public AudioClip swoosh2;
+    public AudioClip swoosh3;
+    public AudioClip swoosh4;
+    public AudioClip swoosh5;
+
+    private GameObject speakerGrunt;
+    private GameObject speakerSwoosh;
+
     void Start ()
     {
         instanceEM = EnemiesManager.instance;
@@ -46,17 +67,28 @@ public class Player : MonoBehaviour
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
                 if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
                 {
-                    Move(new Vector3(-1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                    if(transform.position.y < blockTopArena.transform.position.y && transform.position.x > blockLeftArena.transform.position.x)
+                    {
+                        Move(new Vector3(-1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                    }
+                    
                     transform.rotation = new Quaternion(0, 180, 0, 1);
                 }
                 else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
                 {
-                    Move(new Vector3(1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                    if (transform.position.y < blockTopArena.transform.position.y && transform.position.x < blockRightArena.transform.position.x)
+                    {
+                        Move(new Vector3(1 / Mathf.Sqrt(2), 1 / Mathf.Sqrt(2), 0));
+                    }
                     transform.rotation = new Quaternion(0, 0, 0, 1);
                 }
                 else
                 {
-                    Move(new Vector3(0, 1, 0));
+                    if (transform.position.y < blockTopArena.transform.position.y)
+                    {
+                        Move(new Vector3(0, 1, 0));
+                    }
+                        
                 }
             }
             else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxis("L_YAxis_1") > 0.2)
@@ -64,29 +96,44 @@ public class Player : MonoBehaviour
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
                 if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
                 {
-                    Move(new Vector3(-1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                    if (transform.position.y > blockDownArena.transform.position.y && transform.position.x > blockLeftArena.transform.position.x)
+                    {
+                        Move(new Vector3(-1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                    }
                     transform.rotation = new Quaternion(0, 180, 0, 1);
                 }
                 else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
                 {
-                    Move(new Vector3(1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                    if (transform.position.y > blockDownArena.transform.position.y && transform.position.x < blockRightArena.transform.position.x)
+                    {
+                        Move(new Vector3(1 / Mathf.Sqrt(2), -1 / Mathf.Sqrt(2), 0));
+                    }
                     transform.rotation = new Quaternion(0, 0, 0, 1);
                 }
                 else
                 {
-                    Move(new Vector3(0, -1, 0));
+                    if (transform.position.y > blockDownArena.transform.position.y)
+                    {
+                        Move(new Vector3(0, -1, 0));
+                    }
                 }
             }
             else if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
-                Move(new Vector3(-1, 0, 0));
+                if (transform.position.x > blockLeftArena.transform.position.x)
+                {
+                    Move(new Vector3(-1, 0, 0));
+                }
                 transform.rotation = new Quaternion(0, 180, 0, 1);
             }
             else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
                 this.GetComponent<Animator>().SetTrigger("triggerMove");
-                Move(new Vector3(1, 0, 0));
+                if (transform.position.x < blockRightArena.transform.position.x)
+                {
+                    Move(new Vector3(1, 0, 0));
+                }
                 transform.rotation = new Quaternion(0, 0, 0, 1);
             }
         }
@@ -190,6 +237,7 @@ public class Player : MonoBehaviour
 
     public void receiveDamage(int damage)
     {
+        speakerGrunt = SoundManager.Instance.RandomizeSfx(grunt1, grunt2, grunt3, grunt4, grunt5, grunt6);
         mLife -= damage;
         if(mLife < 1)
         {
@@ -201,6 +249,7 @@ public class Player : MonoBehaviour
 
         mCanAttack = false;
         this.GetComponent<Animator>().SetTrigger("triggerAttack");
+        speakerSwoosh = SoundManager.Instance.RandomizeSfx(swoosh1, swoosh2, swoosh3, swoosh4, swoosh5);
         GameObject obj = Instantiate(box, transform.GetChild(0).transform.position, Quaternion.identity) as GameObject;
         obj.transform.parent = transform;
         yield return new WaitForSeconds(attackDelay);

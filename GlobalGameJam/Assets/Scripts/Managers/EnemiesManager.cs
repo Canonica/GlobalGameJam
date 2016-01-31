@@ -25,6 +25,29 @@ public class EnemiesManager : MonoBehaviour
     public GameObject mSpawnRight;
     public GameObject mSpawnDown;
 
+    public AudioClip gobelin1;
+    public AudioClip gobelin2;
+    public AudioClip gobelin3;
+    public AudioClip gobelin4;
+    public AudioClip gobelin5;
+    public AudioClip gobelin6;
+
+    private GameObject speakerGobelin;
+
+    public AudioClip giant1;
+    public AudioClip giant2;
+    public AudioClip giant3;
+
+    private GameObject speakerGiant;
+
+    public AudioClip troll1;
+    public AudioClip troll2;
+    public AudioClip troll3;
+    public AudioClip troll4;
+    public AudioClip hit5;
+
+    private GameObject speakerTroll;
+
     void Awake ()
     {
         if (instance == null)

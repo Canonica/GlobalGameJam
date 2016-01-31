@@ -23,6 +23,8 @@ public class DayManager : MonoBehaviour {
             mAllCanvasGroupDay = GameObject.FindGameObjectWithTag("groupAllDay").GetComponent<CanvasGroup>();
             mCanvasGroupDay = GameObject.FindGameObjectWithTag("groupDay").GetComponent<CanvasGroup>();
             ShowDay();
+            HomeManager.instance.ActiveCollectible();
+
         }
 
 

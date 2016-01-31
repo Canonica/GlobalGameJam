@@ -5,6 +5,13 @@ using System.Collections;
 public class BoxHit : MonoBehaviour
 {
     Player player;
+    public AudioClip hit1;
+    public AudioClip hit2;
+    public AudioClip hit3;
+    public AudioClip hit4;
+    public AudioClip hit5;
+
+    private GameObject speakerHit;
 
     void Start()
     {
@@ -19,6 +26,7 @@ public class BoxHit : MonoBehaviour
         player.sizeBeforeHit = player.instanceEM.mEnemies.Count;
         if(other.tag == "Enemy")
         {
+            speakerHit = SoundManager.Instance.RandomizeSfx(hit1, hit2, hit3, hit4, hit5);
             Enemy enemy = other.GetComponent<Enemy>();
             enemy.mLife--;
             if (enemy.mLife < 1)
