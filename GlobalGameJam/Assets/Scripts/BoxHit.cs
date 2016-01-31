@@ -13,7 +13,9 @@ public class BoxHit : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+
         if (other.tag == "Player") return;
+
         player.sizeBeforeHit = player.instanceEM.mEnemies.Count;
         if(other.tag == "Enemy")
         {
@@ -24,6 +26,17 @@ public class BoxHit : MonoBehaviour
                 player.instanceEM.mEnemies.Remove(enemy);
                 enemy.gameObject.SetActive(false);
             }
+            player.instanceEM.mEnemies.Remove(enemy);
+            switch(other.name)
+            {
+                case "Gobelin":
+                    EnemiesManager.instance.currentNbEnemies--; break;
+                case "Troll":
+                    EnemiesManager.instance.currentNbEnemies -= 2; break;
+                case "Giant":
+                    EnemiesManager.instance.currentNbEnemies -= 3; break;
+            }
+            enemy.gameObject.SetActive(false);
         }
         
         
