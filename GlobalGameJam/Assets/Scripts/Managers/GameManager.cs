@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
     public void EndOfGame(int scorePlayer)
     {
         GameManager.instance.gamestate = GameManager.GameState.endOfGame;
-        if (scorePlayer >= goodScoreDayOne * Mathf.Pow(1.3f, DayManager.instance.currentDay))
+        if (scorePlayer >= (int)(goodScoreDayOne * Mathf.Pow(1.3f, DayManager.instance.currentDay)))
 
         {
             CollectiblesManager.instance.mCollectibles[DayManager.instance.currentDay%4] = true;
@@ -96,7 +96,6 @@ public class GameManager : MonoBehaviour
 
     IEnumerator ShowEndCanvasWin()
     {
-        Debug.Log("Win");
         CanvasEndGameWin.SetActive(true);
         CanvasEndGameWin.GetComponentInChildren<ShowRecompense>().Show(DayManager.instance.currentDay);
         yield return new WaitForSeconds(3.0f);
@@ -105,7 +104,6 @@ public class GameManager : MonoBehaviour
 
     IEnumerator ShowEndCanvasLoose()
     {
-        Debug.Log("Loose");
         CanvasEndGameLoose.SetActive(true);
         yield return new WaitForSeconds(3.0f);
         LoadHouse();
