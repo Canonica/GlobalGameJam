@@ -230,11 +230,10 @@ public class Player : MonoBehaviour
 
     public void receiveDamage(int damage)
     {
-        mLife -= damage;
-        if(mLife < 1)
-        {
-            instanceGM.GameOver();
-        }
+        multiplierScore = 1;
+        pointsToMultiplier = 0;
+        score--;
+        if (score < 0) score = 0;
     }
     IEnumerator Attack()
     {
