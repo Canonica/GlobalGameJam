@@ -31,28 +31,14 @@ public class BoxHit : MonoBehaviour
             enemy.mLife--;
             if (enemy.mLife < 1)
             {
-                player.instanceEM.mEnemies.Remove(enemy);
-                enemy.gameObject.SetActive(false);
+                enemy.isDeath = true;
+                StartCoroutine(death(enemy));
             }
-            player.instanceEM.mEnemies.Remove(enemy);
-            switch(other.name)
-            {
-                case "Gobelin":
-                    EnemiesManager.instance.currentNbEnemies--; break;
-                case "Troll":
-                    EnemiesManager.instance.currentNbEnemies -= 2; break;
-                case "Giant":
-                    EnemiesManager.instance.currentNbEnemies -= 3; break;
-            }
-            enemy.gameObject.SetActive(false);
+
         }
-        
-        
 
 
         //Scoring
-        if (Time.time > player.timeLastKill + player.timeMultiplier)
-            player.multiplierScore = 1; 
 
         if (player.sizeBeforeHit - player.instanceEM.mEnemies.Count > 0)
         {
@@ -60,18 +46,38 @@ public class BoxHit : MonoBehaviour
             addScore += GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>().score * (player.sizeBeforeHit - player.instanceEM.mEnemies.Count);
             addScore += player.bonusMultiKill * (player.sizeBeforeHit - player.instanceEM.mEnemies.Count - 1);
             addScore *= player.multiplierScore;
+            player.pointsToMultiplier += GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>().score * (player.sizeBeforeHit - player.instanceEM.mEnemies.Count);
+            player.pointsToMultiplier += player.bonusMultiKill * (player.sizeBeforeHit - player.instanceEM.mEnemies.Count - 1);
+            player.pointsToMultiplier *= player.multiplierScore;
 
-            if (addScore > 20000)
+            if (player.pointsToMultiplier > 20000)
                 player.multiplierScore = 4;
-            else if (addScore > 5000)
+            else if (player.pointsToMultiplier > 5000)
                 player.multiplierScore = 3;
-            else if (addScore > 1000)
+            else if (player.pointsToMultiplier > 1000)
                 player.multiplierScore = 2;
 
             player.sizeBeforeHit = player.instanceEM.mEnemies.Count;
 
             player.score += addScore;
         }
+    }
+
+    IEnumerator death(Enemy enemy)
+    {
+        player.timeLastKill = Time.time;
+        switch (enemy.name)
+        {
+            case "Gobelin":
+                EnemiesManager.instance.currentNbEnemies--; break;
+            case "Troll":
+                EnemiesManager.instance.currentNbEnemies -= 2; break;
+            case "Giant":
+                EnemiesManager.instance.currentNbEnemies -= 3; break;
+        }
+       
+        player.instanceEM.mEnemies.Remove(enemy);
+        yield return new WaitForEndOfFrame();
     }
 
 }

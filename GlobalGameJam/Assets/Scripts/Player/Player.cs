@@ -21,7 +21,9 @@ public class Player : MonoBehaviour
     public float timeMultiplier;
     public bool mCanAttack;
     public float attackDelay;
+    public int pointsToMultiplier;
     public GameObject box;
+    public GameObject imageSource;
 
     public Text scoreText;
 
@@ -57,10 +59,49 @@ public class Player : MonoBehaviour
         mCanAttack = true;
         attackDelay = 0.5f;
     }
+
+    public void ChangeImage(string newImageTitle)
+    {
+        imageSource.GetComponent<Image>().sprite = Resources.Load<Sprite>(newImageTitle);
+    }
+    
     void Update()
     {
+        if (Time.time > timeLastKill + timeMultiplier)
+        {
+            multiplierScore = 1;
+            pointsToMultiplier = 0;
+        }
+
+        if(Application.loadedLevel == 2)
+        {
+            Debug.Log(multiplierScore);
+            switch (multiplierScore)
+            {
+                case 1:
+                    imageSource.SetActive(false);
+                    break;
+                case 2:
+                    imageSource.SetActive(true);
+                    ChangeImage("x2");
+                    break;
+                case 3:
+                    imageSource.SetActive(true);
+                    ChangeImage("x3");
+                    break;
+                case 4: // A revoir
+                    imageSource.SetActive(true);
+                    ChangeImage("x4");
+                    break;
+            }
+        }
+
+        
+
         if (GameManager.instance.gamestate == GameManager.GameState.playing)
         {
+            scoreText.text = score.ToString();
+
 
             if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxis("L_YAxis_1") < -0.2)
             {

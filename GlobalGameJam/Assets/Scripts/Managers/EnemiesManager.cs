@@ -48,6 +48,9 @@ public class EnemiesManager : MonoBehaviour
 
     private GameObject speakerTroll;
 
+    public Countdown CD;
+
+
     void Awake ()
     {
         if (instance == null)
@@ -68,12 +71,14 @@ public class EnemiesManager : MonoBehaviour
 	
 	void Update ()
     {
-        if (!isSpawning && GameManager.instance.gamestate == GameManager.GameState.playing)
+        if(GameManager.instance.gamestate == GameManager.GameState.playing)
         {
-            startSpawnEnnemies();
-            isSpawning = true;
+            if (!isSpawning)
+            {
+                startSpawnEnnemies();
+                isSpawning = true;
+            }
         }
-
     }
 
     void startSpawnEnnemies()
@@ -113,9 +118,8 @@ public class EnemiesManager : MonoBehaviour
 
     public IEnumerator spawnEnnemies()
     {
-        nbMaxEnemies = nbMaxGobelin + 2 * nbMaxOrc + 3 * nbMaxGiant;
-        Debug.Log("MaxEnemies : " + nbMaxEnemies);
-        currentNbEnemies = 0;
+        nbMaxEnemies = nbMaxGobelin + 2 * nbMaxOrc + 3 * nbMaxGiant * (2 -  CD.m_second/30);
+        currentNbEnemies = mEnemies.Count;
         Vector3 spawnPos;
         GameObject newEnemy;
         while (nbMaxEnemies - currentNbEnemies >= 3)
@@ -129,6 +133,8 @@ public class EnemiesManager : MonoBehaviour
                 {
                     case 0:
                         newEnemy = Instantiate(prefabGobelin, spawnPos, Quaternion.identity) as GameObject;
+                        float randSpeed = UnityEngine.Random.Range(0.85f, 1.11f);
+                        newEnemy.GetComponent<Enemy>().mMovementSpeed *= randSpeed;
                         currentNbEnemies += 1;
                         break;
                     case 1:
@@ -153,6 +159,8 @@ public class EnemiesManager : MonoBehaviour
             {
                 case 1:
                     newEnemy = Instantiate(prefabGobelin, spawnPos, Quaternion.identity) as GameObject;
+                    float randSpeed = UnityEngine.Random.Range(0.85f, 1.11f);
+                    newEnemy.GetComponent<Enemy>().mMovementSpeed *= randSpeed;
                     break;
                 case 2:
                     newEnemy = Instantiate(prefabOrc, spawnPos, Quaternion.identity) as GameObject;
@@ -162,6 +170,7 @@ public class EnemiesManager : MonoBehaviour
                     break;
             }
             currentNbEnemies = nbMaxEnemies;
+            isSpawning = false;
         }
         isSpawning = false;
     }
