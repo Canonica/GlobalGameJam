@@ -9,11 +9,13 @@ public class GameManager : MonoBehaviour
     public enum GameState { menu, pause, playing, endOfGame, beforePlay, house };
     public int goodScoreDayOne;
 
+    public GameObject CanvasEndGameWin;
+    public GameObject CanvasEndGameLoose;
+
     public GameState gamestate;
     #region Singleton
     static private GameManager s_Instance;
     #endregion
-
     static public GameManager instance
     {
         get
@@ -35,6 +37,14 @@ public class GameManager : MonoBehaviour
 
             Invoke("DestroyAllMonsters", 0.5f);
         }
+
+        if(level == 2)
+        {
+            CanvasEndGameWin = GameObject.FindGameObjectWithTag("CanvasEndGameWin");
+            CanvasEndGameLoose = GameObject.FindGameObjectWithTag("CanvasEndGameLoose");
+            CanvasEndGameWin.SetActive(false);
+            CanvasEndGameLoose.SetActive(false);
+        }
     }
 
     void Update()
@@ -51,12 +61,19 @@ public class GameManager : MonoBehaviour
 
     public void EndOfGame(int scorePlayer)
     {
-        GameManager.instance.gamestate = GameManager.GameState.house;
-        if(scorePlayer >= goodScoreDayOne * Mathf.Pow(1.3f, DayManager.instance.currentDay))
+        GameManager.instance.gamestate = GameManager.GameState.endOfGame;
+        if (scorePlayer >= goodScoreDayOne * Mathf.Pow(1.3f, DayManager.instance.currentDay))
 
         {
             CollectiblesManager.instance.mCollectibles[DayManager.instance.currentDay%4] = true;
+            StartCoroutine(ShowEndCanvasWin());
         }
+        
+    }
+
+    public void LoadHouse()
+    {
+        GameManager.instance.gamestate = GameManager.GameState.house;
         DayManager.instance.currentDay++;
         Application.LoadLevel("House");
     }
@@ -75,6 +92,23 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObjects[i]);
         }
+    }
+
+    IEnumerator ShowEndCanvasWin()
+    {
+        Debug.Log("Win");
+        CanvasEndGameWin.SetActive(true);
+        CanvasEndGameWin.GetComponentInChildren<ShowRecompense>().Show(DayManager.instance.currentDay);
+        yield return new WaitForSeconds(3.0f);
+        LoadHouse();
+    }
+
+    IEnumerator ShowEndCanvasLoose()
+    {
+        Debug.Log("Loose");
+        CanvasEndGameLoose.SetActive(true);
+        yield return new WaitForSeconds(3.0f);
+        LoadHouse();
     }
 
 }

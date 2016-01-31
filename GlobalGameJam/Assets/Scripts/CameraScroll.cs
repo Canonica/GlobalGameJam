@@ -14,22 +14,23 @@ public class CameraScroll : MonoBehaviour {
     {
         if (target)
         {
-            
             GetComponent<Camera>().orthographicSize = 5.5f;
-            Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
-            Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.3f, 0.3f, 10)); //(new Vector3(0.5, 0.5, point.z));
-            Vector3 destination = transform.position + delta;
-            transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
-            if (Vector3.Distance(transform.position, blockRight.transform.position) < 19)
+            if (transform.position.x < blockRight.transform.position.x)
             {
-                    transform.position = new Vector3(4.0f, transform.position.y, transform.position.z);
+                Debug.Log("toto");
+                
+                Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
+                Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.3f, 0.3f, 10)); //(new Vector3(0.5, 0.5, point.z));
+                Vector3 destination = transform.position + delta;
+                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
             }
-
-            if (Vector3.Distance(transform.position, blockLeft.transform.position) < 19)
+            if(transform.position.x > blockLeft.transform.position.x)
             {
-                transform.position = new Vector3(-4.1f, transform.position.y, transform.position.z);
-            }     
+                Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
+                Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.3f, 0.3f, 10)); //(new Vector3(0.5, 0.5, point.z));
+                Vector3 destination = transform.position + delta;
+                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
+            }
         }
-
     }
 }

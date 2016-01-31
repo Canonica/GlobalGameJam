@@ -20,9 +20,7 @@ public class Enemy : MonoBehaviour
     {
         float step = mMovementSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, mPlayer.transform.position, step);
-        Quaternion rotation = Quaternion.LookRotation
-             (mPlayer.transform.position - transform.position, transform.TransformDirection(Vector3.up));
-        transform.rotation = new Quaternion(0, 0, rotation.z, rotation.w);
+        
         if ( (mPlayer.transform.position-transform.position).magnitude < rangeHitPlayer)
         {
             mPlayer.GetComponent<Player>().receiveDamage(mDamage);
@@ -33,4 +31,14 @@ public class Enemy : MonoBehaviour
     {
         return score;
     }
+
+    /*void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Physics.IgnoreCollision(collision.collider, GetComponent<Collider>());
+        }
+
+    }*/
 }

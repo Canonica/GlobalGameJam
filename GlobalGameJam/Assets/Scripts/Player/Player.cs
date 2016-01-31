@@ -25,6 +25,9 @@ public class Player : MonoBehaviour
 
     public Text scoreText;
 
+    public GameObject blockLeftPlayer;
+    public GameObject blockRightPlayer;
+
     void Start ()
     {
         instanceEM = EnemiesManager.instance;
@@ -98,17 +101,21 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxis("L_XAxis_1") < -0.2)
             {
                 transform.localRotation = new Quaternion(0f, 180f, 0f, 1);
-                Move(new Vector3(-1, 0, 0));
+                
+                if(transform.position.x > blockLeftPlayer.transform.position.x)
+                {
+                    Move(new Vector3(-1, 0, 0));
+                }
             }
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxis("L_XAxis_1") > 0.2)
             {
                 transform.localRotation = new Quaternion(0f, 0f, 0f, 1);
-                Move(new Vector3(1, 0, 0));
+                if (transform.position.x < blockRightPlayer.transform.position.x)
+                {
+                    Move(new Vector3(1, 0, 0));
+                }
             }
         }
-
-        scoreText.text = score.ToString();
-        Debug.Log(score);
     }
 
     /*void HitKeyBoard()
